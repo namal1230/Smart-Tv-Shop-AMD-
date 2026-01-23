@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:smart_tv_shop/screens/auth/signup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -29,9 +30,9 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     if (selectedRole == "Owner") {
-      Navigator.pushReplacementNamed(context, '/ownerDashboard');
+      // Navigator.pushReplacementNamed(context, '/ownerDashboard');
     } else {
-      Navigator.pushReplacementNamed(context, '/customerHome');
+      // Navigator.pushReplacementNamed(context, '/customerHome');
     }
   }
 
@@ -160,9 +161,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Center(
                   child: TextButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, '/signup');
+                      // Navigator.pushNamed(context, '/signup');
                     },
-                    child: const Text("Don't have an account? Sign Up"),
+                    child: InkWell(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => SignupScreen(),));
+                      },
+                      child: const Text("Don't have an account? Sign Up")
+                      ),
                   ),
                 ),
               ),
