@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_tv_shop/screens/auth/signup_screen.dart';
+import 'package:smart_tv_shop/screens/customer/customer_home.dart';
 import 'package:smart_tv_shop/screens/owner/owner_dashboard.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -33,7 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if (selectedRole == "Owner") {
       Navigator.push(context, MaterialPageRoute(builder: (context) => const OwnerDashboard(),));
     } else {
-      // Navigator.pushReplacementNamed(context, '/customerHome');
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const CustomerHome(),));
     }
   }
 
