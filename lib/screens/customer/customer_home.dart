@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:smart_tv_shop/screens/customer/shop_details_screen.dart';
 
 class CustomerHome extends StatelessWidget {
   const CustomerHome({super.key});
@@ -11,7 +12,7 @@ class CustomerHome extends StatelessWidget {
       {
         "title": "Shop Details",
         "icon": Icons.storefront,
-        "route": '/shopDetails',
+        "route": ShopDetailsScreen(),
         "color": Colors.deepPurple,
       },
       {
@@ -66,7 +67,7 @@ class CustomerHome extends StatelessWidget {
                     delay: Duration(milliseconds: 100 * index),
                     child: InkWell(
                       onTap: () {
-                        Navigator.pushNamed(context, feature['route']);
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => feature['route']));
                       },
                       child: Card(
                         elevation: 5,
