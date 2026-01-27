@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "119723572008",
+    "project_id": "flutter-smart-tv",
+    "storage_bucket": "flutter-smart-tv.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:119723572008:android:bc794f3c508577794a2e1d",
+        "android_client_info": {
+          "package_name": "com.example.smart_tv_shop"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBEP3Lp-wOqO2Kkkjyj0y-qHq5iKEvfsJs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
