@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:smart_tv_shop/screens/owner/request_details_screen.dart';
 
 class PendingRequestsScreen extends StatefulWidget {
   const PendingRequestsScreen({super.key});
@@ -87,78 +88,83 @@ class _PendingRequestsScreenState extends State<PendingRequestsScreen> {
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-
-                        /// Item name
-                        Text(
-                          request["item"]!,
-                          style: GoogleFonts.poppins(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-
-                        const SizedBox(height: 8),
-
-                        /// Issue
-                        Text(
-                          "Issue: ${request["issue"]}",
-                          style: GoogleFonts.poppins(),
-                        ),
-
-                        const SizedBox(height: 6),
-
-                        /// Customer
-                        Text(
-                          "Customer: ${request["customer"]}",
-                          style: GoogleFonts.poppins(),
-                        ),
-
-                        const SizedBox(height: 6),
-
-                        /// Phone
-                        Text(
-                          "Phone: ${request["phone"]}",
-                          style: GoogleFonts.poppins(),
-                        ),
-
-                        const SizedBox(height: 6),
-
-                        /// Date
-                        Text(
-                          "Requested Date: ${request["date"]}",
-                          style: GoogleFonts.poppins(
-                            color: Colors.grey,
-                            fontSize: 13,
-                          ),
-                        ),
-
-                        const SizedBox(height: 16),
-
-                        /// Action Buttons
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            OutlinedButton(
-                              onPressed: () => _rejectRequest(index),
-                              style: OutlinedButton.styleFrom(
-                                foregroundColor: Colors.red,
-                              ),
-                              child: const Text("Reject"),
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => RequestDetailsScreen()));
+                      },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                      
+                          /// Item name
+                          Text(
+                            request["item"]!,
+                            style: GoogleFonts.poppins(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
                             ),
-                            const SizedBox(width: 12),
-                            ElevatedButton(
-                              onPressed: () => _acceptRequest(index),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.green,
-                              ),
-                              child: const Text("Accept"),
+                          ),
+                      
+                          const SizedBox(height: 8),
+                      
+                          /// Issue
+                          Text(
+                            "Issue: ${request["issue"]}",
+                            style: GoogleFonts.poppins(),
+                          ),
+                      
+                          const SizedBox(height: 6),
+                      
+                          /// Customer
+                          Text(
+                            "Customer: ${request["customer"]}",
+                            style: GoogleFonts.poppins(),
+                          ),
+                      
+                          const SizedBox(height: 6),
+                      
+                          /// Phone
+                          Text(
+                            "Phone: ${request["phone"]}",
+                            style: GoogleFonts.poppins(),
+                          ),
+                      
+                          const SizedBox(height: 6),
+                      
+                          /// Date
+                          Text(
+                            "Requested Date: ${request["date"]}",
+                            style: GoogleFonts.poppins(
+                              color: Colors.grey,
+                              fontSize: 13,
                             ),
-                          ],
-                        ),
-                      ],
+                          ),
+                      
+                          const SizedBox(height: 16),
+                      
+                          /// Action Buttons
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              OutlinedButton(
+                                onPressed: () => _rejectRequest(index),
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: Colors.red,
+                                ),
+                                child: const Text("Reject"),
+                              ),
+                              const SizedBox(width: 12),
+                              ElevatedButton(
+                                onPressed: () => _acceptRequest(index),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.green,
+                                ),
+                                child: const Text("Accept"),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );

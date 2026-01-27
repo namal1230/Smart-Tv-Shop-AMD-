@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_tv_shop/screens/owner/pending_requests_screen.dart';
+import 'package:smart_tv_shop/screens/owner/request_details_screen.dart';
 
 class OwnerDashboard extends StatelessWidget {
   const OwnerDashboard({super.key});
@@ -67,7 +68,7 @@ class OwnerDashboard extends StatelessWidget {
                       value: "5",
                       icon: Icons.build_circle,
                       color: Colors.blue,
-                      // route: '/inProgress',
+                      // route: RequestDetailsScreen(),
                     ),
                   ),
 
