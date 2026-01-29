@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_tv_shop/screens/customer/customer_requests_screen.dart';
 import 'package:smart_tv_shop/screens/customer/request_repair_screen.dart';
 import 'package:smart_tv_shop/screens/customer/shop_details_screen.dart';
+import 'package:smart_tv_shop/services/auth_service.dart';
 
 class CustomerHome extends StatelessWidget {
   const CustomerHome({super.key});
@@ -35,6 +36,14 @@ class CustomerHome extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Customer Home"),
         centerTitle: true,
+         actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () {
+              // Call sign out method from AuthService
+              AuthService(context).signOut();
+            },
+      ),]
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),

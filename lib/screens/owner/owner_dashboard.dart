@@ -5,6 +5,7 @@ import 'package:smart_tv_shop/screens/owner/pending_requests_screen.dart';
 import 'package:smart_tv_shop/screens/owner/repair_history_screen.dart';
 import 'package:smart_tv_shop/screens/owner/repair_in_progress_screen.dart';
 import 'package:smart_tv_shop/screens/owner/request_details_screen.dart';
+import 'package:smart_tv_shop/services/auth_service.dart';
 
 class OwnerDashboard extends StatelessWidget {
   const OwnerDashboard({super.key});
@@ -19,7 +20,8 @@ class OwnerDashboard extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () {
-              Navigator.pop(context);
+              // Call sign out method from AuthService
+              AuthService(context).signOut();
             },
           )
         ],

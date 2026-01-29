@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_tv_shop/screens/auth/signup_screen.dart';
 import 'package:smart_tv_shop/screens/customer/customer_home.dart';
 import 'package:smart_tv_shop/screens/owner/owner_dashboard.dart';
+import 'package:smart_tv_shop/services/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -26,16 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    Fluttertoast.showToast(
-      msg: "Login successful as $selectedRole",
-      backgroundColor: Colors.green,
-    );
-
-    if (selectedRole == "Owner") {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => const OwnerDashboard(),));
-    } else {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => const CustomerHome(),));
-    }
+    AuthService.signIn(_emailController.text, _passwordController.text, selectedRole,context);
   }
 
   @override

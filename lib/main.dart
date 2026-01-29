@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_tv_shop/providers/auth_provider.dart';
 import 'package:smart_tv_shop/screens/auth/login_screen.dart';
 import 'package:smart_tv_shop/screens/splash/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -9,7 +12,12 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(
+      ChangeNotifierProvider(
+        create: (context) => AuthStateProvider(),
+        child: const MyApp(),
+      ),
+  );
 }
 
 class MyApp extends StatelessWidget {
