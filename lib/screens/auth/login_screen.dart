@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:smart_tv_shop/screens/auth/reset_password_screen.dart';
 import 'package:smart_tv_shop/screens/auth/signup_screen.dart';
 import 'package:smart_tv_shop/screens/customer/customer_home.dart';
 import 'package:smart_tv_shop/screens/owner/owner_dashboard.dart';
@@ -153,16 +154,30 @@ class _LoginScreenState extends State<LoginScreen> {
               FadeInUp(
                 delay: const Duration(milliseconds: 300),
                 child: Center(
-                  child: TextButton(
-                    onPressed: () {
-                      // Navigator.pushNamed(context, '/signup');
-                    },
-                    child: InkWell(
-                      onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => SignupScreen(),));
+                  child: Column(
+                    children:[ TextButton(
+                      onPressed: () {
+                        // Navigator.pushNamed(context, '/signup');
                       },
-                      child: const Text("Don't have an account? Sign Up")
-                      ),
+                      child: InkWell(
+                        onTap: (){
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => SignupScreen(),));
+                        },
+                        child: const Text("Don't have an account? Sign Up")
+                        ),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        // Navigator.pushNamed(context, '/signup');
+                      },
+                      child: InkWell(
+                        onTap: (){
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => ResetPasswordScreen(),));
+                        },
+                        child: const Text("Forgot Password? Reset Here")
+                        ),
+                    ),
+                    ],
                   ),
                 ),
               ),
