@@ -114,4 +114,14 @@ class AuthService {
     await _auth.signOut();
     Navigator.pop(_context);
   }
+
+  static Future<void> resetPassword(BuildContext context, String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+      Fluttertoast.showToast(msg: "Password reset email sent");
+      Navigator.pop(context);
+    } on FirebaseAuthException catch (e) {
+      Fluttertoast.showToast(msg: e.message ?? "Error sending password reset email");
+    }
+  }
 }

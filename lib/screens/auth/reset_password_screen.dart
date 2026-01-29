@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:smart_tv_shop/services/auth_service.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
   const ResetPasswordScreen({super.key});
@@ -112,13 +113,16 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                             ? const CircularProgressIndicator(
                                 color: Colors.white,
                               )
-                            : Text(
-                                "Send Reset Link",
-                                style: GoogleFonts.poppins(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
+                            : InkWell(
+                              onTap: () => AuthService.resetPassword(context, _emailController.text),
+                              child: Text(
+                                  "Send Reset Link",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
-                              ),
+                            ),
                       ),
                     ),
 
