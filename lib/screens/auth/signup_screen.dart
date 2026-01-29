@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:smart_tv_shop/services/auth_service.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -23,6 +24,12 @@ class _SignupScreenState extends State<SignupScreen> {
 
   void signup() {
     if (!_formKey.currentState!.validate()) return;
+
+    // Call the AuthService to sign up the user
+    AuthService.signUp(
+       _emailController.text,
+       _passwordController.text,
+    );
 
     Fluttertoast.showToast(
       msg: "Account created successfully",
