@@ -1,4 +1,6 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -11,17 +13,30 @@ import 'package:smart_tv_shop/screens/customer/customer_home.dart';
 import 'package:smart_tv_shop/screens/owner/owner_dashboard.dart';
 
 class AuthService {
+  static CollectionReference users = FirebaseFirestore.instance.collection(
+    'users',
+  );
   static final _auth = FirebaseAuth.instance;
   final BuildContext _context;
+
+  // final
 
   AuthService(this._context);
 
   // Authentication related methods will go here
-  static Future<void> signUp(String email, String password) async {
+  static Future<void> signUp(
+    String email,
+    String password,
+    String role,
+    String name,
+    String contact,
+  ) async {
     // Sign up logic
     try {
       final credential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
+
+      await saveUserData(credential.user?.uid, name, role, contact);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         print('The password provided is too weak.');
@@ -61,6 +76,7 @@ class AuthService {
 
         Navigator.pop(_context);
       } else {
+        // _uid = user.uid;
         Navigator.push(
           _context,
           MaterialPageRoute(builder: (context) => CustomerHome()),
@@ -69,17 +85,25 @@ class AuthService {
     });
   }
 
-  static Future<void> signIn(String email, String password, String role,BuildContext context) async {
+  static Future<void> signIn(
+    String email,
+    String password,
+    String role,
+    BuildContext context,
+  ) async {
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
       Fluttertoast.showToast(msg: "Login Successful");
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => role == "Customer" ? CustomerHome() : OwnerDashboard()),
+        MaterialPageRoute(
+          builder: (context) =>
+              role == "Customer" ? CustomerHome() : OwnerDashboard(),
+        ),
       );
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-         AwesomeDialog(
+        AwesomeDialog(
           context: context,
           animType: AnimType.scale,
           dialogType: DialogType.error,
@@ -87,9 +111,8 @@ class AuthService {
           desc: "No user found for that email.",
           btnOkOnPress: () {},
         ).show();
-
       } else if (e.code == 'wrong-password') {
-         AwesomeDialog(
+        AwesomeDialog(
           context: context,
           animType: AnimType.scale,
           dialogType: DialogType.error,
@@ -97,7 +120,7 @@ class AuthService {
           desc: "Wrong password provided for that user.",
           btnOkOnPress: () {},
         ).show();
-      } else{
+      } else {
         AwesomeDialog(
           context: context,
           animType: AnimType.scale,
@@ -121,7 +144,26 @@ class AuthService {
       Fluttertoast.showToast(msg: "Password reset email sent");
       Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
-      Fluttertoast.showToast(msg: e.message ?? "Error sending password reset email");
+      Fluttertoast.showToast(
+        msg: e.message ?? "Error sending password reset email",
+      );
+    }
+  }
+
+  static Future<void> saveUserData(
+    String? uid,
+    String name,
+    String role,
+    String contact,
+  ) async {
+    if (uid != null) {
+      await users.doc(uid).set({
+        'name': name,
+        'role': role,
+        'contact': contact,
+      });
+    } else {
+      print("Error: User ID is null. Cannot save user data.");
     }
   }
 }

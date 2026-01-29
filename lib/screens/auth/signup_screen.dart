@@ -37,6 +37,9 @@ class _SignupScreenState extends State<SignupScreen> {
     AuthService.signUp(
        _emailController.text,
        _passwordController.text,
+        selectedRole,
+        _nameController.text,
+        _phoneController.text
     );
 
     Fluttertoast.showToast(
