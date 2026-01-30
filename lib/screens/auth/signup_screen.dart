@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:smart_tv_shop/providers/auth_provider.dart';
 import 'package:smart_tv_shop/services/auth_service.dart';
+import 'package:smart_tv_shop/services/image_service.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -35,11 +39,11 @@ class _SignupScreenState extends State<SignupScreen> {
 
     // Call the AuthService to sign up the user
     AuthService.signUp(
-       _emailController.text,
-       _passwordController.text,
-        selectedRole,
-        _nameController.text,
-        _phoneController.text
+      _emailController.text,
+      _passwordController.text,
+      selectedRole,
+      _nameController.text,
+      _phoneController.text,
     );
 
     Fluttertoast.showToast(
@@ -83,6 +87,77 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
 
                 const SizedBox(height: 30),
+
+                InkWell(
+                  borderRadius: BorderRadius.circular(100),
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: const Text("Profile Picture"),
+                          content: const Text(
+                            "Choose you profile picture from gallery or take a new photo.",
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => context
+                                  .read<AuthStateProvider>()
+                                  .pickImage("gallery"),
+                              child: const Text("choose from gallery"),
+                            ),
+                            TextButton(
+                              onPressed: () => context
+                                  .read<AuthStateProvider>()
+                                  .pickImage("camera"),
+                              child: const Text("take a new photo"),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                  child: Consumer<AuthStateProvider>(
+                    builder: (context, authProvider, child) {
+                      return Container(
+                        width: 120,
+                        height: 120,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: Colors.deepPurple,
+                            width: 2,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black12,
+                              blurRadius: 10,
+                              offset: Offset(0, 5),
+                            ),
+                          ],
+                        ),
+                        child: ClipOval(
+                          child:
+                              authProvider.imagePath == null ||
+                                  authProvider.imagePath!.path.isEmpty
+                              ? Container(
+                                  color: Colors.deepPurple.shade50,
+                                  child: Icon(
+                                    Icons.camera_alt,
+                                    size: 40,
+                                    color: Colors.deepPurple,
+                                  ),
+                                )
+                              : Image.file(
+                                  authProvider.imagePath!,
+                                  fit: BoxFit.cover,
+                                ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(height: 20),
 
                 /// Name
                 FadeInLeft(
