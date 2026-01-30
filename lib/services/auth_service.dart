@@ -18,6 +18,7 @@ class AuthService {
   );
   static final _auth = FirebaseAuth.instance;
   final BuildContext _context;
+  static final String? uid = _auth.currentUser?.uid;
 
   // final
 

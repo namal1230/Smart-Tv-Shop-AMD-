@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_tv_shop/providers/product_provider.dart';
 
 class RequestRepairScreen extends StatefulWidget {
   const RequestRepairScreen({super.key});
@@ -23,6 +25,30 @@ class _RequestRepairScreenState extends State<RequestRepairScreen> {
 
   void submitRequest() {
     if (!_formKey.currentState!.validate()) return;
+
+    Provider.of<ProductProvider>(context, listen: false).itemType =
+        selectedItemType;
+    Provider.of<ProductProvider>(context, listen: false).itemModel =
+        _itemController.text;
+    Provider.of<ProductProvider>(context, listen: false).itemBrand =
+        _brandController.text;
+    Provider.of<ProductProvider>(context, listen: false).issueDescription =
+        _issueController.text;
+
+    Provider.of<ProductProvider>(context, listen: false)
+        .saveProductDetails().then((value) {
+          if (value == "success") {
+            Fluttertoast.showToast(
+              msg: "Repair request submitted successfully!",
+              backgroundColor: Colors.green,
+            );
+          } else {
+            Fluttertoast.showToast(
+              msg: "Failed to submit repair request.",
+              backgroundColor: Colors.red,
+            );
+          }
+        });
 
     Fluttertoast.showToast(
       msg: "Repair request submitted successfully!",
