@@ -1,33 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_tv_shop/providers/product_provider.dart';
 
 class CustomerRequestsScreen extends StatelessWidget {
   const CustomerRequestsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Dummy requests data
-    final List<Map<String, String>> requests = [
-      {
-        "item": "Samsung LED TV",
-        "issue": "No display",
-        "date": "2026-01-20",
-        "status": "Pending",
-      },
-      {
-        "item": "Sony Radio",
-        "issue": "Sound issue",
-        "date": "2026-01-21",
-        "status": "Accepted",
-      },
-      {
-        "item": "LG AC",
-        "issue": "Not cooling",
-        "date": "2026-01-18",
-        "status": "Rejected",
-      },
-    ];
+    print("Building CustomerRequestsScreen");
+    Provider.of<ProductProvider>(context, listen: false).getProducts();
 
+    // var products = Provider.of<ProductProvider>(context).productList;
+
+
+    // Dummy requests data
+    final List<Map<String, dynamic>> requests =  Provider.of<ProductProvider>(context).productList;
+    print("Fetched products: $requests");
     Color statusColor(String status) {
       switch (status) {
         case "Accepted":
@@ -72,7 +61,7 @@ class CustomerRequestsScreen extends StatelessWidget {
 
                         /// Item
                         Text(
-                          request["item"]!,
+                          request["type"]!,
                           style: GoogleFonts.poppins(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -83,15 +72,28 @@ class CustomerRequestsScreen extends StatelessWidget {
 
                         /// Issue
                         Text(
-                          "Issue: ${request["issue"]}",
+                          "Issue: ${request["description"]}",
                           style: GoogleFonts.poppins(),
                         ),
 
                         const SizedBox(height: 6),
 
+                         Text(
+                          "Brand: ${request["brand"]}",
+                          style: GoogleFonts.poppins(),
+                        ),
+
+                        const SizedBox(height: 6),
+
+                         Text(
+                          "Model: ${request["model"]}",
+                          style: GoogleFonts.poppins(),
+                        ),
+
+                        const SizedBox(height: 6),
                         /// Date
                         Text(
-                          "Date: ${request["date"]}",
+                          "Date: ${new DateTime.now().day}/${new DateTime.now().month}/${new DateTime.now().year}",
                           style: GoogleFonts.poppins(color: Colors.grey),
                         ),
 

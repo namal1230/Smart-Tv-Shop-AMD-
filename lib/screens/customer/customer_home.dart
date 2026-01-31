@@ -11,6 +11,7 @@ class CustomerHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("Building CustomerHome Screen");
     final List<Map<String, dynamic>> features = [
       {
         "title": "Shop Details",

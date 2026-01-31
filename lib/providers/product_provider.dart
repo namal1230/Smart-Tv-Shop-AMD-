@@ -15,6 +15,8 @@ class ProductProvider extends ChangeNotifier {
   String? get itemBrand => _itemBrand;
   String? get issueDescription => _issueDescription;
 
+  List<Map<String, dynamic>> _products = [];
+
   set itemType(String? value) {
     _itemType = value;
     notifyListeners();
@@ -49,4 +51,11 @@ class ProductProvider extends ChangeNotifier {
 
   }
 
+  Future<void> getProducts() async {
+    var products = await ProductService().getProducts(id: AuthService.uid);
+    this._products = products;
+    notifyListeners();
+  }
+
+  get productList => _products;
 }
