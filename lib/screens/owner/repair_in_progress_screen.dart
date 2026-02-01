@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_tv_shop/providers/product_provider.dart';
 
 class RepairInProgressScreen extends StatefulWidget {
   const RepairInProgressScreen({super.key});
@@ -11,40 +13,40 @@ class RepairInProgressScreen extends StatefulWidget {
 }
 
 class _RepairInProgressScreenState extends State<RepairInProgressScreen> {
-  final List<Map<String, String>> inProgressRepairs = [
-    {
-      "item": "Samsung LED TV",
-      "issue": "Display issue",
-      "customer": "Kamal Perera",
-      "status": "In Progress",
-    },
-    {
-      "item": "Sony Radio",
-      "issue": "No sound",
-      "customer": "Nimal Silva",
-      "status": "In Progress",
-    },
-  ];
 
-  void _markCompleted(int index) {
+   @override
+  void initState() {
+    Provider.of<ProductProvider>(context, listen: false).getAcceptedProducts();
+    super.initState();
+  }
+
+  List<Map<String, dynamic>> acceptRequest = [];
+
+  void _markCompleted(String id) {
+    print("id in product $id");
+    Provider.of<ProductProvider>(context, listen: false)
+        .markRepairCompleted(id)
+        .then((_) {
+      
+    });
     Fluttertoast.showToast(
       msg: "Repair marked as completed",
       backgroundColor: Colors.green,
     );
-
-    setState(() {
-      inProgressRepairs.removeAt(index);
-    });
   }
 
   @override
   Widget build(BuildContext context) {
+     final List<Map<String, dynamic>> acceptedProducts =  Provider.of<ProductProvider>(context).acceptedProducts;
+    print("Fetched accepted products: $acceptedProducts");
+    acceptRequest =acceptedProducts;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Repairs In Progress"),
         centerTitle: true,
       ),
-      body: inProgressRepairs.isEmpty
+      body: acceptRequest.isEmpty
           ? Center(
               child: Text(
                 "No repairs in progress",
@@ -53,9 +55,9 @@ class _RepairInProgressScreenState extends State<RepairInProgressScreen> {
             )
           : ListView.builder(
               padding: const EdgeInsets.all(16),
-              itemCount: inProgressRepairs.length,
+              itemCount: acceptRequest.length,
               itemBuilder: (context, index) {
-                final repair = inProgressRepairs[index];
+                final repair = acceptRequest[index];
 
                 return Card(
                   elevation: 5,
@@ -71,7 +73,7 @@ class _RepairInProgressScreenState extends State<RepairInProgressScreen> {
 
                         /// Item
                         Text(
-                          repair["item"]!,
+                          repair["type"]!,
                           style: GoogleFonts.poppins(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -82,7 +84,7 @@ class _RepairInProgressScreenState extends State<RepairInProgressScreen> {
 
                         /// Issue
                         Text(
-                          "Issue: ${repair["issue"]}",
+                          "Issue: ${repair["description"]}",
                           style: GoogleFonts.poppins(),
                         ),
 
@@ -90,7 +92,7 @@ class _RepairInProgressScreenState extends State<RepairInProgressScreen> {
 
                         /// Customer
                         Text(
-                          "Customer: ${repair["customer"]}",
+                          "Customer: ${repair["user"]["name"]}",
                           style: GoogleFonts.poppins(),
                         ),
 
@@ -109,7 +111,7 @@ class _RepairInProgressScreenState extends State<RepairInProgressScreen> {
                         Align(
                           alignment: Alignment.centerRight,
                           child: ElevatedButton.icon(
-                            onPressed: () => _markCompleted(index),
+                            onPressed: () => _markCompleted(repair['id']),
                             icon: const Icon(Icons.check_circle),
                             label: const Text("Mark Completed"),
                             style: ElevatedButton.styleFrom(

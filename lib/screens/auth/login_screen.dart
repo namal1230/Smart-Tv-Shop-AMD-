@@ -2,6 +2,8 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_tv_shop/providers/auth_provider.dart';
 import 'package:smart_tv_shop/screens/auth/reset_password_screen.dart';
 import 'package:smart_tv_shop/screens/auth/signup_screen.dart';
 import 'package:smart_tv_shop/screens/customer/customer_home.dart';
@@ -28,7 +30,8 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    AuthService.signIn(_emailController.text, _passwordController.text, selectedRole,context);
+    Provider.of<AuthStateProvider>(context, listen: false).login(_emailController.text, _passwordController.text, selectedRole, context);
+    // AuthService.signIn(_emailController.text, _passwordController.text, selectedRole,context);
   }
 
   @override
@@ -100,32 +103,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
-              FadeInUp(
-                child: DropdownButtonFormField<String>(
-                  value: selectedRole,
-                  decoration: InputDecoration(
-                    labelText: "Login As",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  items: const [
-                    DropdownMenuItem(
-                      value: "Customer",
-                      child: Text("Customer"),
-                    ),
-                    DropdownMenuItem(value: "Owner", child: Text("Shop Owner")),
-                  ],
-                  onChanged: (value) {
-                    setState(() {
-                      selectedRole = value!;
-                    });
-                  },
                 ),
               ),
 

@@ -8,6 +8,7 @@ class RepairRequestModel {
   String? brand;
   String? description;
   String? status;
+  DateTime? date;
   RepairRequestModel({
     this.userId,
     this.type,
@@ -15,6 +16,7 @@ class RepairRequestModel {
     this.brand,
     this.description,
     this.status,
+    this.date
   });
   
   
@@ -26,6 +28,7 @@ class RepairRequestModel {
     String? brand,
     String? description,
     String? status,
+    DateTime? date,
   }) {
     return RepairRequestModel(
       userId: userId ?? this.userId,
@@ -34,6 +37,7 @@ class RepairRequestModel {
       brand: brand ?? this.brand,
       description: description ?? this.description,
       status: status ?? this.status,
+      date: date ?? this.date,
     );
   }
 
@@ -45,6 +49,7 @@ class RepairRequestModel {
       'brand': brand,
       'description': description,
       'status': status,
+      'date': date,
     };
   }
 
@@ -56,6 +61,7 @@ class RepairRequestModel {
       brand: map['brand'] != null ? map['brand'] as String : null,
       description: map['description'] != null ? map['description'] as String : null,
       status: map['status'] != null ? map['status'] as String : null,
+      date: map['date'] != null ? map['date'] as DateTime : null,
     );
   }
 
@@ -65,7 +71,7 @@ class RepairRequestModel {
 
   @override
   String toString() {
-    return 'RepairRequestModel(userId: $userId, type: $type, model: $model, brand: $brand, description: $description, status: $status)';
+    return 'RepairRequestModel(userId: $userId, type: $type, model: $model, brand: $brand, description: $description, status: $status, date: $date)';
   }
 
   @override
@@ -78,7 +84,9 @@ class RepairRequestModel {
       other.model == model &&
       other.brand == brand &&
       other.description == description &&
-      other.status == status;
+      other.status == status &&
+      other.date == date;
+      
   }
 
   @override
@@ -88,6 +96,7 @@ class RepairRequestModel {
       model.hashCode ^
       brand.hashCode ^
       description.hashCode ^
-      status.hashCode;
+      status.hashCode ^
+      date.hashCode;
   }
 }

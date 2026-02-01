@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_tv_shop/providers/product_provider.dart';
 import 'package:smart_tv_shop/screens/owner/request_details_screen.dart';
 
 class PendingRequestsScreen extends StatefulWidget {
@@ -11,22 +14,14 @@ class PendingRequestsScreen extends StatefulWidget {
 }
 
 class _PendingRequestsScreenState extends State<PendingRequestsScreen> {
-  final List<Map<String, String>> pendingRequests = [
-    {
-      "item": "Samsung LED TV",
-      "issue": "No display",
-      "customer": "Kamal Perera",
-      "phone": "0771234567",
-      "date": "2026-01-20",
-    },
-    {
-      "item": "Sony Radio",
-      "issue": "Sound issue",
-      "customer": "Nimal Silva",
-      "phone": "0719876543",
-      "date": "2026-01-21",
-    },
-  ];
+
+  @override
+  void initState() {
+    Provider.of<ProductProvider>(context, listen: false).getPendingProducts();
+    super.initState();
+  }
+
+  List<Map<String, dynamic>> pendingRequests = [];
 
   void _acceptRequest(int index) {
     AwesomeDialog(
@@ -36,9 +31,11 @@ class _PendingRequestsScreenState extends State<PendingRequestsScreen> {
       desc: "Do you want to accept this repair request?",
       btnOkText: "Accept",
       btnOkOnPress: () {
-        setState(() {
-          pendingRequests.removeAt(index);
-        });
+        Provider.of<ProductProvider>(context, listen: false)
+                            .acceptRequest(pendingRequests[index]['id'])
+                            .then((_) {
+
+                        });
       },
       btnCancelOnPress: () {},
     ).show();
@@ -52,9 +49,11 @@ class _PendingRequestsScreenState extends State<PendingRequestsScreen> {
       desc: "Are you sure you want to reject this request?",
       btnOkText: "Reject",
       btnOkOnPress: () {
-        setState(() {
-          pendingRequests.removeAt(index);
-        });
+           Provider.of<ProductProvider>(context, listen: false)
+                            .rejectRequest(pendingRequests[index]['id'])
+                            .then((_) {
+                          
+                        });
       },
       btnCancelOnPress: () {},
     ).show();
@@ -62,6 +61,10 @@ class _PendingRequestsScreenState extends State<PendingRequestsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final List<Map<String, dynamic>> pendingProducts =  Provider.of<ProductProvider>(context).pendingProductsList;
+    print("Fetched pending products: $pendingProducts");
+    pendingRequests =pendingProducts;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Pending Repair Requests"),
@@ -80,6 +83,9 @@ class _PendingRequestsScreenState extends State<PendingRequestsScreen> {
               itemBuilder: (context, index) {
                 final request = pendingRequests[index];
 
+                Timestamp timestamp = request["date"];
+                DateTime dateTime = timestamp.toDate();
+
                 return Card(
                   elevation: 5,
                   margin: const EdgeInsets.only(bottom: 16),
@@ -90,7 +96,7 @@ class _PendingRequestsScreenState extends State<PendingRequestsScreen> {
                     padding: const EdgeInsets.all(16),
                     child: InkWell(
                       onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => RequestDetailsScreen()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => RequestDetailsScreen(request: request)));
                       },
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,7 +104,7 @@ class _PendingRequestsScreenState extends State<PendingRequestsScreen> {
                       
                           /// Item name
                           Text(
-                            request["item"]!,
+                            request["type"]!,
                             style: GoogleFonts.poppins(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -109,7 +115,7 @@ class _PendingRequestsScreenState extends State<PendingRequestsScreen> {
                       
                           /// Issue
                           Text(
-                            "Issue: ${request["issue"]}",
+                            "Issue: ${request["description"]}",
                             style: GoogleFonts.poppins(),
                           ),
                       
@@ -117,7 +123,7 @@ class _PendingRequestsScreenState extends State<PendingRequestsScreen> {
                       
                           /// Customer
                           Text(
-                            "Customer: ${request["customer"]}",
+                            "Customer: ${request["user"]["name"]}",
                             style: GoogleFonts.poppins(),
                           ),
                       
@@ -125,7 +131,7 @@ class _PendingRequestsScreenState extends State<PendingRequestsScreen> {
                       
                           /// Phone
                           Text(
-                            "Phone: ${request["phone"]}",
+                            "Phone: ${request["user"]["contact"]}",
                             style: GoogleFonts.poppins(),
                           ),
                       
@@ -133,7 +139,7 @@ class _PendingRequestsScreenState extends State<PendingRequestsScreen> {
                       
                           /// Date
                           Text(
-                            "Requested Date: ${request["date"]}",
+                            "Requested Date: ${dateTime.toLocal().toString().split(' ')[0]}",
                             style: GoogleFonts.poppins(
                               color: Colors.grey,
                               fontSize: 13,

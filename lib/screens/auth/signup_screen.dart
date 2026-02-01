@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:animate_do/animate_do.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -23,6 +24,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _addressController = TextEditingController();
 
   bool obscurePassword = true;
   String selectedRole = "Customer";
@@ -38,18 +40,31 @@ class _SignupScreenState extends State<SignupScreen> {
     if (!_formKey.currentState!.validate()) return;
 
     // Call the AuthService to sign up the user
-    AuthService.signUp(
-      _emailController.text,
-      _passwordController.text,
-      selectedRole,
-      _nameController.text,
-      _phoneController.text,
-    );
+    // AuthService.signUp(
+    //   _emailController.text,
+    //   _passwordController.text,
+    //   selectedRole,
+    //   _nameController.text,
+    //   _phoneController.text,
+    // );
 
-    Fluttertoast.showToast(
-      msg: "Account created successfully",
-      backgroundColor: Colors.green,
-    );
+    final result = Provider.of<AuthStateProvider>(context, listen: false)
+        .signUp(
+          _emailController.text,
+          _passwordController.text,
+          selectedRole,
+          _nameController.text,
+          _phoneController.text,
+          _addressController.text,
+        )
+        .then(
+          (value) => Fluttertoast.showToast(
+            msg: value == "success"
+                ? "Account created successfully"
+                : "Error creating account",
+            backgroundColor: value == "success" ? Colors.green : Colors.red,
+          ),
+        );
 
     Navigator.pop(context); // back to login
   }
@@ -206,6 +221,20 @@ class _SignupScreenState extends State<SignupScreen> {
 
                 const SizedBox(height: 20),
 
+                FadeInLeft(
+                  child: TextFormField(
+                    controller: _addressController,
+                    keyboardType: TextInputType.streetAddress,
+                    decoration: _inputDecoration(
+                      label: "Address",
+                      icon: Icons.home,
+                    ),
+                    validator: (value) =>
+                        value!.length < 9 ? "Invalid address" : null,
+                  ),
+                ),
+                const SizedBox(height: 20),
+
                 /// Password
                 FadeInRight(
                   child: TextFormField(
@@ -232,34 +261,6 @@ class _SignupScreenState extends State<SignupScreen> {
                     validator: (value) => value!.length < 6
                         ? "Password must be at least 6 characters"
                         : null,
-                  ),
-                ),
-
-                const SizedBox(height: 20),
-
-                /// Role
-                FadeInUp(
-                  child: DropdownButtonFormField<String>(
-                    value: selectedRole,
-                    decoration: _inputDecoration(
-                      label: "Register As",
-                      icon: Icons.person_outline,
-                    ),
-                    items: const [
-                      DropdownMenuItem(
-                        value: "Customer",
-                        child: Text("Customer"),
-                      ),
-                      DropdownMenuItem(
-                        value: "Owner",
-                        child: Text("Shop Owner"),
-                      ),
-                    ],
-                    onChanged: (value) {
-                      setState(() {
-                        selectedRole = value!;
-                      });
-                    },
                   ),
                 ),
 

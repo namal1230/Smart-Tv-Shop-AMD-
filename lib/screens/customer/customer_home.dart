@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_tv_shop/providers/product_provider.dart';
+import 'package:smart_tv_shop/screens/auth/login_screen.dart';
 import 'package:smart_tv_shop/screens/customer/customer_requests_screen.dart';
 import 'package:smart_tv_shop/screens/customer/request_repair_screen.dart';
 import 'package:smart_tv_shop/screens/customer/shop_details_screen.dart';
@@ -43,6 +46,8 @@ class CustomerHome extends StatelessWidget {
             onPressed: () {
               // Call sign out method from AuthService
               AuthService(context).signOut();
+              // Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+              Provider.of<ProductProvider>(context, listen: false).clearData();
             },
       ),]
       ),

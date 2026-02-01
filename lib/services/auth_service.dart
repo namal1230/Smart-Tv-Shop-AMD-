@@ -31,13 +31,14 @@ class AuthService {
     String role,
     String name,
     String contact,
+    String address,
   ) async {
     // Sign up logic
     try {
       final credential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
 
-      await saveUserData(credential.user?.uid, name, role, contact);
+      await saveUserData(credential.user?.uid, name, role, contact, address,email);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         print('The password provided is too weak.');
@@ -94,14 +95,56 @@ class AuthService {
   ) async {
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
-      Fluttertoast.showToast(msg: "Login Successful");
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) =>
-              role == "Customer" ? CustomerHome() : OwnerDashboard(),
-        ),
-      );
+      QuerySnapshot data = await users
+          .where('uid', isEqualTo: _auth.currentUser?.uid)
+          .get();
+      print("User data: ${data.docs.first.data()}");
+
+      Map<String, dynamic> userData =
+          data.docs.first.data() as Map<String, dynamic>;
+
+      if (userData['role'] == "Customer") {
+        AwesomeDialog(
+          context: context,
+          animType: AnimType.scale,
+          dialogType: DialogType.success,
+          title: "Login Successful",
+          desc: "You have been successfully logged in.",
+          btnOkOnPress: () {},
+        ).show();
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                CustomerHome(),
+          ),
+        );
+      } else if (userData['role'] == "Owner") {
+        AwesomeDialog(
+          context: context,
+          animType: AnimType.scale,
+          dialogType: DialogType.success,
+          title: "Login Successful",
+          desc: "You have been successfully logged in as an Owner.",
+          btnOkOnPress: () {},
+        ).show();
+         Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                OwnerDashboard(),
+          ),
+        );
+      } else {
+        AwesomeDialog(
+          context: context,
+          animType: AnimType.scale,
+          dialogType: DialogType.error,
+          title: "Authentication Error",
+          desc: "Invalid user role.",
+          btnOkOnPress: () {},
+        ).show();
+      }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         AwesomeDialog(
@@ -156,12 +199,17 @@ class AuthService {
     String name,
     String role,
     String contact,
+    String address,
+    String email,
   ) async {
     if (uid != null) {
       await users.doc(uid).set({
+        'uid': uid,
         'name': name,
         'role': role,
         'contact': contact,
+        'address': address,
+        'email': email,
       });
     } else {
       print("Error: User ID is null. Cannot save user data.");

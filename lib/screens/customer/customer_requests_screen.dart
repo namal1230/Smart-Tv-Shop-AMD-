@@ -8,12 +8,7 @@ class CustomerRequestsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("Building CustomerRequestsScreen");
-    Provider.of<ProductProvider>(context, listen: false).getProducts();
-
     // var products = Provider.of<ProductProvider>(context).productList;
-
-
     // Dummy requests data
     final List<Map<String, dynamic>> requests =  Provider.of<ProductProvider>(context).productList;
     print("Fetched products: $requests");
