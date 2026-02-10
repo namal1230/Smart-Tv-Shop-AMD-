@@ -12,10 +12,7 @@ class ProductService {
   Future<String> addProductRequest(Map<String, dynamic> requestData) async {
     try {
       final docRef = productRequests.doc();
-      var value = await docRef.set({
-        'id': docRef.id,
-        ...requestData
-      });
+      var value = await docRef.set({'id': docRef.id, ...requestData});
       print("Product request added with ID: ${docRef.id}");
       return "success";
     } catch (e) {
@@ -58,16 +55,18 @@ class ProductService {
       if (productsSnapshot.docs.isEmpty) return products;
 
       Set<String> userIds = productsSnapshot.docs
-          .map((doc) => (doc.data() as Map<String, dynamic>)['userId'] as String)
+          .map(
+            (doc) => (doc.data() as Map<String, dynamic>)['userId'] as String,
+          )
           .toSet();
 
-          print("User IDs for pending products: $userIds");
+      print("User IDs for pending products: $userIds");
 
       QuerySnapshot usersSnapshot = await users
           .where('uid', whereIn: userIds.toList())
           .get();
 
-          print("Users snapshot: ${usersSnapshot.docs.length} documents");
+      print("Users snapshot: ${usersSnapshot.docs.length} documents");
 
       Map<String, Map<String, dynamic>> userMap = {
         for (var doc in usersSnapshot.docs)
@@ -94,7 +93,6 @@ class ProductService {
     return products;
   }
 
-  
   Future<List<Map<String, dynamic>>> getAcceptedProducts() async {
     List<Map<String, dynamic>> products = [];
 
@@ -108,15 +106,17 @@ class ProductService {
       if (productsSnapshot.docs.isEmpty) return products;
 
       Set<String> userIds = productsSnapshot.docs
-          .map((doc) => (doc.data() as Map<String, dynamic>)['userId'] as String)
+          .map(
+            (doc) => (doc.data() as Map<String, dynamic>)['userId'] as String,
+          )
           .toSet();
 
-          print("User IDs for accepted products: $userIds");
+      print("User IDs for accepted products: $userIds");
       QuerySnapshot usersSnapshot = await users
           .where('uid', whereIn: userIds.toList())
           .get();
 
-          print("Users snapshot: ${usersSnapshot.docs.length} documents");
+      print("Users snapshot: ${usersSnapshot.docs.length} documents");
 
       Map<String, Map<String, dynamic>> userMap = {
         for (var doc in usersSnapshot.docs)
@@ -141,5 +141,64 @@ class ProductService {
       print("Error fetching accepted products: $e");
     }
     return products;
+  }
+
+  Future<int?> getCompletedCount() async {
+    final query = productRequests.where('status', isEqualTo: 'Completed');
+
+    final snapshot = await query.count().get();
+    return snapshot.count;
+  }
+
+  Future<int?> getPendingCount() async {
+    final query = productRequests.where('status', isEqualTo: 'Pending');
+
+    final snapshot = await query.count().get();
+    return snapshot.count;
+  }
+
+  Future<int?> getProgressCount() async {
+    final query = productRequests.where('status', isEqualTo: 'Accepted');
+
+    final snapshot = await query.count().get();
+    return snapshot.count;
+  }
+
+  Future<Map<String, int>> getPriceMap() async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('shopDetails')
+        .limit(1)
+        .get();
+
+    final data = snapshot.docs.first.data();
+    List prices = data['prices'];
+
+    Map<String, int> priceMap = {};
+    for (var p in prices) {
+      priceMap[p['item']] = p['amount'];
+    }
+
+    return priceMap;
+  }
+
+  Future<Map<String, int>> getCompletedTotals() async {
+    final priceMap = await getPriceMap();
+
+    final snapshot = await FirebaseFirestore.instance
+        .collection('productRequests')
+        .where('status', isEqualTo: 'Completed')
+        .get();
+
+    Map<String, int> totals = {};
+
+    for (var doc in snapshot.docs) {
+      String type = doc['type'];
+
+      if (priceMap.containsKey(type)) {
+        totals[type] = (totals[type] ?? 0) + priceMap[type]!;
+      }
+    }
+
+    return totals;
   }
 }

@@ -1,19 +1,48 @@
-import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:smart_tv_shop/screens/customer/shop_details_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_tv_shop/providers/admin_provider.dart';
+import 'package:smart_tv_shop/providers/auth_provider.dart';
 import 'package:smart_tv_shop/screens/owner/pending_requests_screen.dart';
 import 'package:smart_tv_shop/screens/owner/repair_history_screen.dart';
 import 'package:smart_tv_shop/screens/owner/repair_in_progress_screen.dart';
-import 'package:smart_tv_shop/screens/owner/request_details_screen.dart';
 import 'package:smart_tv_shop/screens/owner/shop_details_edit_screen.dart';
 import 'package:smart_tv_shop/services/auth_service.dart';
 
-class OwnerDashboard extends StatelessWidget {
+class OwnerDashboard extends StatefulWidget {
   const OwnerDashboard({super.key});
 
   @override
+  State<OwnerDashboard> createState() => _OwnerDashboardState();
+}
+
+class _OwnerDashboardState extends State<OwnerDashboard> {
+
+  
+  @override
+  void initState() {
+    super.initState();
+
+    // Load dashboard data once
+    Future.microtask(() {
+      context.read<AdminProvider>().getDashboardValues();
+    });
+  }
+  
+  @override
   Widget build(BuildContext context) {
+
+    final provider = context.watch<AdminProvider>();
+
+  if (provider.isLoading || provider.dashboardData == null) {
+    return const Scaffold(
+      body: Center(child: CircularProgressIndicator()),
+    );
+  }
+
+  final data = provider.dashboardData!;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Owner Dashboard"),
@@ -59,7 +88,7 @@ class OwnerDashboard extends StatelessWidget {
                     child: _statCard(
                       context,
                       title: "Pending Repairs",
-                      value: "8",
+                      value: data['pendingCount'].toString(),
                       icon: Icons.pending_actions,
                       color: Colors.orange,
                       route: PendingRequestsScreen(),
@@ -71,7 +100,7 @@ class OwnerDashboard extends StatelessWidget {
                     child: _statCard(
                       context,
                       title: "In Progress",
-                      value: "5",
+                      value: data['inProgressCount'].toString(),
                       icon: Icons.build_circle,
                       color: Colors.blue,
                       route: RepairInProgressScreen(),
@@ -83,7 +112,7 @@ class OwnerDashboard extends StatelessWidget {
                     child: _statCard(
                       context,
                       title: "Completed",
-                      value: "23",
+                      value: data['completedCount'].toString(),
                       icon: Icons.check_circle,
                       color: Colors.green,
                       route: RepairHistoryScreen(),
@@ -95,7 +124,7 @@ class OwnerDashboard extends StatelessWidget {
                     child: _statCard(
                       context,
                       title: "Total Earnings",
-                      value: "Rs. 185,000",
+                      value: "Rs. ${data['grandTotal']}",
                       icon: Icons.currency_rupee,
                       color: Colors.purple,
                       route: null,

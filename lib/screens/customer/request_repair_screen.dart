@@ -125,35 +125,35 @@ class _RequestRepairScreenState extends State<RequestRepairScreen> {
 
               const SizedBox(height: 16),
 
-              /// Customer Name
-              TextFormField(
-                controller: _customerNameController,
-                decoration: _inputDecoration(label: "Your Name"),
-                validator: (value) =>
-                    value!.isEmpty ? "Name is required" : null,
-              ),
+              // /// Customer Name
+              // TextFormField(
+              //   controller: _customerNameController,
+              //   decoration: _inputDecoration(label: "Your Name"),
+              //   validator: (value) =>
+              //       value!.isEmpty ? "Name is required" : null,
+              // ),
 
-              const SizedBox(height: 16),
+              // const SizedBox(height: 16),
 
-              /// Phone
-              TextFormField(
-                controller: _phoneController,
-                keyboardType: TextInputType.phone,
-                decoration: _inputDecoration(label: "Phone Number"),
-                validator: (value) =>
-                    value!.length < 9 ? "Invalid phone number" : null,
-              ),
+              // /// Phone
+              // TextFormField(
+              //   controller: _phoneController,
+              //   keyboardType: TextInputType.phone,
+              //   decoration: _inputDecoration(label: "Phone Number"),
+              //   validator: (value) =>
+              //       value!.length < 9 ? "Invalid phone number" : null,
+              // ),
 
-              const SizedBox(height: 16),
+              // const SizedBox(height: 16),
 
-              /// Email
-              TextFormField(
-                controller: _emailController,
-                keyboardType: TextInputType.emailAddress,
-                decoration: _inputDecoration(label: "Email"),
-                validator: (value) =>
-                    value!.contains("@") ? null : "Enter valid email",
-              ),
+              // /// Email
+              // TextFormField(
+              //   controller: _emailController,
+              //   keyboardType: TextInputType.emailAddress,
+              //   decoration: _inputDecoration(label: "Email"),
+              //   validator: (value) =>
+              //       value!.contains("@") ? null : "Enter valid email",
+              // ),
 
               const SizedBox(height: 30),
 

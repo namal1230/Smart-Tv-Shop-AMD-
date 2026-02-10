@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_tv_shop/providers/shop_provider.dart';
 
 class ShopDetailsScreen extends StatelessWidget {
   const ShopDetailsScreen({super.key});
@@ -7,20 +9,10 @@ class ShopDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Dummy data
-    final Map<String, String> timings = {
-      "Weekdays": "9:00 AM - 6:00 PM",
-      "Saturday": "9:00 AM - 4:00 PM",
-      "Sunday": "Closed",
-      "Poya Days": "Closed",
-      "Christmas": "Closed",
-    };
+    final shopDetails = Provider.of<ShopProvider>(context).shopDetails;
 
-    final List<Map<String, dynamic>> prices = [
-      {"item": "TV Repair", "amount": 5000},
-      {"item": "Radio Repair", "amount": 2500},
-      {"item": "AC Repair", "amount": 7000},
-      {"item": "Microwave Repair", "amount": 3500},
-    ];
+    final Map<String, dynamic> timings = Map<String, dynamic>.from(shopDetails?['timings'] ?? {});
+    final List<Map<String, dynamic>> prices = List<Map<String, dynamic>>.from(shopDetails?['prices'] ?? []);
 
     return Scaffold(
       appBar: AppBar(

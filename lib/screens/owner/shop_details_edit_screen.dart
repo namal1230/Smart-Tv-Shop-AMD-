@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_tv_shop/providers/shop_provider.dart';
 
 class ShopDetailsEditScreen extends StatefulWidget {
   const ShopDetailsEditScreen({super.key});
@@ -9,8 +11,8 @@ class ShopDetailsEditScreen extends StatefulWidget {
 }
 
 class _ShopDetailsEditScreenState extends State<ShopDetailsEditScreen> {
- final _formKey = GlobalKey<FormState>();
-
+  final _formKey = GlobalKey<FormState>();
+  bool _initialized = false;
   final Map<String, TextEditingController> _timingsControllers = {
     "Weekdays": TextEditingController(),
     "Saturday": TextEditingController(),
@@ -71,21 +73,66 @@ class _ShopDetailsEditScreenState extends State<ShopDetailsEditScreen> {
 
     final shopData = {
       "timings": {
-        for (var e in _timingsControllers.entries)
-          e.key: e.value.text,
+        for (var e in _timingsControllers.entries) e.key: e.value.text,
       },
       "prices": _prices,
     };
 
     debugPrint("Shop Details: $shopData");
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Shop details saved")),
-    );
+    Provider.of<ShopProvider>(context, listen: false)
+        .saveShopDetails(shopData)
+        .then((_) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text("Shop details saved")));
+        })
+        .catchError((error) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Failed to save shop details: $error")),
+          );
+        });
   }
 
   @override
   Widget build(BuildContext context) {
+    @override
+    void initState() {
+      super.initState();
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final shopDetails = Provider.of<ShopProvider>(
+          context,
+          listen: false,
+        ).shopDetails;
+
+        if (shopDetails == null || _initialized) return;
+
+        final timings = Map<String, dynamic>.from(shopDetails['timings'] ?? {});
+
+        for (final key in _timingsControllers.keys) {
+          _timingsControllers[key]!.text = timings[key] ?? "";
+        }
+
+        _initialized = true;
+      });
+    }
+
+    @override
+    void dispose() {
+      for (final c in _timingsControllers.values) {
+        c.dispose();
+      }
+      super.dispose();
+    }
+
+    final shopDetails = Provider.of<ShopProvider>(context).shopDetails;
+
+    // timings = Map<String, dynamic>.from(shopDetails?['timings'] ?? {});
+    final List<Map<String, dynamic>> prices = List<Map<String, dynamic>>.from(
+      shopDetails?['prices'] ?? [],
+    );
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -104,10 +151,13 @@ class _ShopDetailsEditScreenState extends State<ShopDetailsEditScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
-                Text("Shop Location",
-                    style: GoogleFonts.poppins(
-                        fontSize: 18, fontWeight: FontWeight.bold)),
+                Text(
+                  "Shop Location",
+                  style: GoogleFonts.poppins(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 const SizedBox(height: 10),
                 Container(
                   height: 200,
@@ -117,12 +167,16 @@ class _ShopDetailsEditScreenState extends State<ShopDetailsEditScreen> {
                   ),
                   child: const Center(child: Text("Map Picker Coming Soon")),
                 ),
-      
+
                 const SizedBox(height: 20),
 
-                Text("Timings & Holidays",
-                    style: GoogleFonts.poppins(
-                        fontSize: 18, fontWeight: FontWeight.bold)),
+                Text(
+                  "Timings & Holidays",
+                  style: GoogleFonts.poppins(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 const SizedBox(height: 10),
                 ..._timingsControllers.entries.map((e) {
                   return Padding(
@@ -140,15 +194,19 @@ class _ShopDetailsEditScreenState extends State<ShopDetailsEditScreen> {
                     ),
                   );
                 }),
-      
+
                 const SizedBox(height: 20),
-      
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("Repair Prices",
-                        style: GoogleFonts.poppins(
-                            fontSize: 18, fontWeight: FontWeight.bold)),
+                    Text(
+                      "Repair Prices",
+                      style: GoogleFonts.poppins(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     IconButton(
                       icon: const Icon(Icons.add),
                       onPressed: _addPriceDialog,
@@ -159,7 +217,8 @@ class _ShopDetailsEditScreenState extends State<ShopDetailsEditScreen> {
                 ..._prices.map((p) {
                   return Card(
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                     child: ListTile(
                       title: Text(p["item"]),
                       trailing: Row(
@@ -170,6 +229,29 @@ class _ShopDetailsEditScreenState extends State<ShopDetailsEditScreen> {
                             icon: const Icon(Icons.delete, color: Colors.red),
                             onPressed: () {
                               setState(() => _prices.remove(p));
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }),
+                const SizedBox(height: 10),
+                ...prices.map((p) {
+                  return Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: ListTile(
+                      title: Text(p["item"], style: GoogleFonts.poppins()),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text("Rs. ${p["amount"]}"),
+                          IconButton(
+                            icon: const Icon(Icons.delete, color: Colors.red),
+                            onPressed: () {
+                              setState(() => prices.remove(p));
                             },
                           ),
                         ],
