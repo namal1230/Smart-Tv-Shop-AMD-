@@ -10,9 +10,9 @@ Splash Screen
 Login Screen
 <p align="center"> <img src="https://github.com/user-attachments/assets/905494e0-d5d6-4d6f-b098-36c029cbb212" width="350"/> </p> <p align="center"><b>Secure login screen with email and password authentication powered by Firebase Authentication.</b></p>
 Create Account Screen
-<p align="center"> <img src="https://github.com/user-attachments/assets/4ef3a4b1-4df9-4e11-a6a0-1e5c60df67c9" width="350"/> </p> <p align="center"><b>Create account screen allowing new users to securely register using Firebase Authentication.</b></p>
+<p align="center"> <img src="https://github.com/user-attachments/assets/32112cf8-47d0-426e-bd78-e645a8f8c7c0" width="350"/> </p> <p align="center"><b>Create account screen allowing new users to securely register using Firebase Authentication.</b></p>
 Profile Image Capture (Signup)
-<p align="center"> <img src="https://github.com/user-attachments/assets/32112cf8-47d0-426e-bd78-e645a8f8c7c0" width="350"/> </p> <p align="center"><b>Profile image capture during signup using device camera or gallery access.</b></p>
+<p align="center"> <img src="https://github.com/user-attachments/assets/4ef3a4b1-4df9-4e11-a6a0-1e5c60df67c9" width="350"/> </p> <p align="center"><b>Profile image capture during signup using device camera or gallery access.</b></p>
 Reset Password Screen
 <p align="center"> <img src="https://github.com/user-attachments/assets/101d41ff-fa32-401c-89ff-b8391c65a1dc" width="350"/> </p> <p align="center"><b>Password reset screen enabling users to securely recover their account via email verification.</b></p>
 User Dashboard
