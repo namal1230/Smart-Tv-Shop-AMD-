@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -59,6 +60,9 @@ class _RepairInProgressScreenState extends State<RepairInProgressScreen> {
               itemBuilder: (context, index) {
                 final repair = acceptRequest[index];
 
+                Timestamp timestamp = repair["date"];
+                DateTime dateTime = timestamp.toDate();
+
                 return Card(
                   elevation: 5,
                   margin: const EdgeInsets.only(bottom: 16),
@@ -71,7 +75,6 @@ class _RepairInProgressScreenState extends State<RepairInProgressScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
 
-                        /// Item
                         Text(
                           repair["type"]!,
                           style: GoogleFonts.poppins(
@@ -82,7 +85,6 @@ class _RepairInProgressScreenState extends State<RepairInProgressScreen> {
 
                         const SizedBox(height: 8),
 
-                        /// Issue
                         Text(
                           "Issue: ${repair["description"]}",
                           style: GoogleFonts.poppins(),
@@ -90,15 +92,23 @@ class _RepairInProgressScreenState extends State<RepairInProgressScreen> {
 
                         const SizedBox(height: 6),
 
-                        /// Customer
                         Text(
                           "Customer: ${repair["user"]["name"]}",
                           style: GoogleFonts.poppins(),
                         ),
 
+                        const SizedBox(height: 6),
+
+                          Text(
+                            "Repair Accept Date: ${dateTime.toLocal().toString().split(' ')[0]}",
+                            style: GoogleFonts.poppins(
+                              color: Colors.grey,
+                              fontSize: 13,
+                            ),
+                          ),
+
                         const SizedBox(height: 12),
 
-                        /// Status Chip
                         Chip(
                           label: Text(repair["status"]!),
                           backgroundColor: Colors.orange.shade100,
@@ -107,7 +117,6 @@ class _RepairInProgressScreenState extends State<RepairInProgressScreen> {
 
                         const SizedBox(height: 16),
 
-                        /// Complete Button
                         Align(
                           alignment: Alignment.centerRight,
                           child: ElevatedButton.icon(

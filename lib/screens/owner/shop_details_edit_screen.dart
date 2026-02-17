@@ -128,7 +128,6 @@ class _ShopDetailsEditScreenState extends State<ShopDetailsEditScreen> {
 
     final shopDetails = Provider.of<ShopProvider>(context).shopDetails;
 
-    // timings = Map<String, dynamic>.from(shopDetails?['timings'] ?? {});
     final List<Map<String, dynamic>> prices = List<Map<String, dynamic>>.from(
       shopDetails?['prices'] ?? [],
     );

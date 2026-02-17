@@ -102,7 +102,6 @@ class _PendingRequestsScreenState extends State<PendingRequestsScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                       
-                          /// Item name
                           Text(
                             request["type"]!,
                             style: GoogleFonts.poppins(
@@ -113,7 +112,6 @@ class _PendingRequestsScreenState extends State<PendingRequestsScreen> {
                       
                           const SizedBox(height: 8),
                       
-                          /// Issue
                           Text(
                             "Issue: ${request["description"]}",
                             style: GoogleFonts.poppins(),
@@ -121,7 +119,6 @@ class _PendingRequestsScreenState extends State<PendingRequestsScreen> {
                       
                           const SizedBox(height: 6),
                       
-                          /// Customer
                           Text(
                             "Customer: ${request["user"]["name"]}",
                             style: GoogleFonts.poppins(),
@@ -129,7 +126,6 @@ class _PendingRequestsScreenState extends State<PendingRequestsScreen> {
                       
                           const SizedBox(height: 6),
                       
-                          /// Phone
                           Text(
                             "Phone: ${request["user"]["contact"]}",
                             style: GoogleFonts.poppins(),
@@ -137,7 +133,6 @@ class _PendingRequestsScreenState extends State<PendingRequestsScreen> {
                       
                           const SizedBox(height: 6),
                       
-                          /// Date
                           Text(
                             "Requested Date: ${dateTime.toLocal().toString().split(' ')[0]}",
                             style: GoogleFonts.poppins(
@@ -148,7 +143,6 @@ class _PendingRequestsScreenState extends State<PendingRequestsScreen> {
                       
                           const SizedBox(height: 16),
                       
-                          /// Action Buttons
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [

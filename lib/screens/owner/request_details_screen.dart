@@ -27,7 +27,6 @@ class RequestDetailsScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
       
-              /// ITEM INFO
               _sectionTitle("Item Information"),
               _infoTile("Item", request["type"]!),
               _infoTile("Brand", request["brand"]!),
@@ -35,7 +34,6 @@ class RequestDetailsScreen extends StatelessWidget {
       
               const SizedBox(height: 20),
       
-              /// CUSTOMER INFO
               _sectionTitle("Customer Information"),
               _infoTile("Name", request["user"]["name"]!),
               _infoTile("Phone", request["user"]["contact"]!),
@@ -43,13 +41,11 @@ class RequestDetailsScreen extends StatelessWidget {
               _infoTile("Address", request["user"]["address"]!),
               const SizedBox(height: 20),
       
-              /// DATE INFO
               _sectionTitle("Request Info"),
               _infoTile("Requested Date", dateTime.toLocal().toString().split(' ')[0]),
       
               const SizedBox(height: 30),
       
-              /// ACTION BUTTONS
               Row(
                 children: [
                   Expanded(

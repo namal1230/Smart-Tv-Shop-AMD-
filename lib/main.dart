@@ -1,11 +1,12 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_tv_shop/providers/admin_provider.dart';
 import 'package:smart_tv_shop/providers/auth_provider.dart';
+import 'package:smart_tv_shop/providers/payment_provider.dart';
 import 'package:smart_tv_shop/providers/product_provider.dart';
 import 'package:smart_tv_shop/providers/shop_provider.dart';
-import 'package:smart_tv_shop/screens/auth/login_screen.dart';
 import 'package:smart_tv_shop/screens/splash/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -13,6 +14,9 @@ import 'firebase_options.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  await dotenv.load(fileName:"assets/.env");
+  Stripe.publishableKey = dotenv.env["PUBLISHABLE_KEY"]!;
   runApp(
     MultiProvider(
       providers: [
@@ -20,6 +24,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (context) => ProductProvider()),
         ChangeNotifierProvider(create: (context) => ShopProvider()),
         ChangeNotifierProvider(create: (context) => AdminProvider()),
+        ChangeNotifierProvider(create: (context) => PaymentProvider()),
       ],
       child: const MyApp(),
     ),

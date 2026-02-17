@@ -26,7 +26,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.deepPurple,
+      backgroundColor: const Color.fromARGB(255, 58, 179, 183),
       body: Center(
         child: FadeIn(
           duration: const Duration(seconds: 2),

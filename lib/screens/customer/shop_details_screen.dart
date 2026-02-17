@@ -8,7 +8,6 @@ class ShopDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Dummy data
     final shopDetails = Provider.of<ShopProvider>(context).shopDetails;
 
     final Map<String, dynamic> timings = Map<String, dynamic>.from(shopDetails?['timings'] ?? {});
@@ -25,7 +24,6 @@ class ShopDetailsScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
 
-            /// MAP PLACEHOLDER
             Text(
               "Shop Location",
               style: GoogleFonts.poppins(
@@ -48,7 +46,6 @@ class ShopDetailsScreen extends StatelessWidget {
 
             const SizedBox(height: 20),
 
-            /// TIMINGS
             Text(
               "Available Timings & Holidays",
               style: GoogleFonts.poppins(
@@ -83,7 +80,6 @@ class ShopDetailsScreen extends StatelessWidget {
 
             const SizedBox(height: 20),
 
-            /// PRICES
             Text(
               "Basic Repair Prices",
               style: GoogleFonts.poppins(

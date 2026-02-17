@@ -5,7 +5,7 @@ import 'package:smart_tv_shop/services/auth_service.dart';
 import 'package:smart_tv_shop/services/image_service.dart';
 
 class AuthStateProvider extends ChangeNotifier {
-  // AuthProvider implementation will go here
+
   bool _state = false;
 
   File? _imagePath = File("");
@@ -41,7 +41,6 @@ class AuthStateProvider extends ChangeNotifier {
     String contact,
     String address,
   ) async {
-    // Sign up logic
     try {
       await AuthService.signUp(email, password, role, name, contact,address);
       return "success";

@@ -9,15 +9,12 @@ class AdminProvider extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
 
-    // 1. Product totals (TV, Radio...)
     final Map<String, int> totalsByProduct =
         await ProductService().getCompletedTotals();
 
-    // 2. Grand total
     final int grandTotal =
         totalsByProduct.values.fold(0, (sum, v) => sum + v);
 
-    // 3. Status counts
     final int completedCount =
         await ProductService().getCompletedCount() ?? 0;
 
@@ -27,7 +24,6 @@ class AdminProvider extends ChangeNotifier {
     final int inProgressCount =
         await ProductService().getProgressCount() ?? 0;
 
-    // 4. Combine everything
     dashboardData = {
       "completedCount": completedCount,
       "pendingCount": pendingCount,

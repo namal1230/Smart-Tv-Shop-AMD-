@@ -4,7 +4,6 @@ import 'package:smart_tv_shop/services/auth_service.dart';
 import 'package:smart_tv_shop/services/product_service.dart';
 
 class ProductProvider extends ChangeNotifier {
-  // Product provider methods and properties would be here
   String? _itemType;
   String? _itemModel;
   String? _itemBrand;
@@ -17,11 +16,15 @@ class ProductProvider extends ChangeNotifier {
 
   ProductProvider(){
     getProducts();
+    getProductsHistory();
+    getAllItems();
   }
 
   List<Map<String, dynamic>> _products = [];
+  List<Map<String, dynamic>?> _productsHistory = [];
   List<Map<String, dynamic>> _pendingProducts = [];
   List<Map<String, dynamic>> _acceptedProducts = [];
+  List<Map<String, dynamic>> _itemDetails = [];
 
   set itemType(String? value) {
     _itemType = value;
@@ -64,7 +67,17 @@ class ProductProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> getProductsHistory() async {
+    var products = await ProductService().getRepairHistory();
+    this._productsHistory = products;
+    notifyListeners();
+  }
+
+  get productHistory => _productsHistory;
+
   get productList => _products;
+
+  get itemList => _itemDetails;
 
   Future<void> getPendingProducts() async {
     var pendingProducts = await ProductService().getPendingProducts();
@@ -76,20 +89,14 @@ class ProductProvider extends ChangeNotifier {
   get acceptedProducts => _acceptedProducts;
 
   Future<void> acceptRequest(String requestId) async {
-    // Logic to accept the request
-    // For example, update the status in Firestore
     var requestRef = ProductService().productRequests.doc(requestId);
-    await requestRef.update({'status': 'Accepted'});
-    // Refresh the pending products list
+    await requestRef.update({'status': 'Accepted','date':DateTime.now()});
     await getPendingProducts();
   }
 
    Future<void> rejectRequest(String requestId) async {
-    // Logic to reject the request
-    // For example, update the status in Firestore
     var requestRef = ProductService().productRequests.doc(requestId);
-    await requestRef.update({'status': 'Rejected'});
-    // Refresh the pending products list
+    await requestRef.update({'status': 'Rejected','date':DateTime.now()});
     await getPendingProducts();
   }
 
@@ -101,14 +108,16 @@ class ProductProvider extends ChangeNotifier {
   }
 
   Future<void> markRepairCompleted(String requestId) async {
-    // Logic to reject the request
-    // For example, update the status in Firestore
     var requestRef = ProductService().productRequests.doc(requestId);
-    await requestRef.update({'status': 'Completed'});
-    // Refresh the pending products list
+    await requestRef.update({'status': 'Completed','date':DateTime.now()});
     await getPendingProducts();
   }
 
+ Future<void> getAllItems() async {
+    var items = await ProductService().getPrices();
+    this._itemDetails = items;
+    notifyListeners();
+  }
   Future<void> clearData() async {
     _itemType = null;
     _itemModel = null;

@@ -5,7 +5,6 @@ class ImageService {
   final ImagePicker _picker = ImagePicker();
 
   Future<File?> selectImage(String option) async {
-    // Implementation for uploading an image
     try {
      final XFile? pickedFile = await _picker.pickImage(source: option == "gallery" ? ImageSource.gallery : ImageSource.camera);
 
@@ -13,7 +12,6 @@ class ImageService {
 
      return File(pickedFile.path);
     } catch (e) {
-      // Handle errors
       print("Error picking image: $e");
       return null;
     }

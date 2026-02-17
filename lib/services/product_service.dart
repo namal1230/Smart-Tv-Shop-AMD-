@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProductService {
-  // Product service methods would be here
   CollectionReference productRequests = FirebaseFirestore.instance.collection(
     'productRequests',
   );
@@ -12,7 +11,7 @@ class ProductService {
   Future<String> addProductRequest(Map<String, dynamic> requestData) async {
     try {
       final docRef = productRequests.doc();
-      var value = await docRef.set({'id': docRef.id, ...requestData});
+      await docRef.set({'id': docRef.id, ...requestData});
       print("Product request added with ID: ${docRef.id}");
       return "success";
     } catch (e) {
@@ -23,22 +22,54 @@ class ProductService {
 
   Future<List<Map<String, dynamic>>> getProducts({String? id}) async {
     List<Map<String, dynamic>> products = [];
-    print("Fetching products for user ID: $id");
-    try {
-      QuerySnapshot querySnapshot;
-      if (id != null) {
-        querySnapshot = await productRequests
-            .where('userId', isEqualTo: id)
-            .get();
-      } else {
-        querySnapshot = await productRequests.get();
-      }
-      for (var doc in querySnapshot.docs) {
-        products.add(doc.data() as Map<String, dynamic>);
-      }
-    } catch (e) {
-      print("Error fetching products: $e");
+
+    QuerySnapshot productSnapshot;
+    if (id != null) {
+      productSnapshot = await productRequests
+          .where('userId', isEqualTo: id)
+          .get();
+    } else {
+      productSnapshot = await productRequests.get();
     }
+
+    QuerySnapshot shopSnapshot = await FirebaseFirestore.instance
+        .collection("shopDetails")
+        .get();
+
+    List<Map<String, dynamic>> shopDetails = shopSnapshot.docs
+        .map((doc) => doc.data() as Map<String, dynamic>)
+        .toList();
+
+    for (var doc in productSnapshot.docs) {
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      String type = data["type"];
+
+      var matchingShop = shopDetails.firstWhere(
+        (shop) =>
+            (shop["prices"] as List<dynamic>).any((p) => p["item"] == type),
+        orElse: () => {},
+      );
+
+      if (matchingShop.isNotEmpty) {
+        List<dynamic> prices = matchingShop["prices"];
+
+        var priceMap = prices.firstWhere(
+          (p) => p["item"] == type,
+          orElse: () => null,
+        );
+
+        data["price"] = priceMap != null ? priceMap["amount"] : 0;
+        data["timings"] = matchingShop["timings"];
+      } else {
+        data["price"] = 0;
+        data["timings"] = {};
+      }
+
+      data.remove("prices");
+
+      products.add(data);
+    }
+
     return products;
   }
 
@@ -201,4 +232,71 @@ class ProductService {
 
     return totals;
   }
+
+  Future<List<Map<String, dynamic>>> getRepairHistory() async {
+  List<Map<String, dynamic>> finalData = [];
+
+  final shopSnapshot = await FirebaseFirestore.instance
+      .collection('shopDetails')
+      .doc('KDc0ZUNjELfwwgt5h9QP')
+      .get();
+
+  final List prices = shopSnapshot.data()?['prices'] ?? [];
+
+  final productRequestsSnapshot = await FirebaseFirestore.instance
+      .collection('productRequests')
+      .where('status', isEqualTo: 'Completed')
+      .get();
+
+  final productRequests = productRequestsSnapshot.docs;
+
+  for (var request in productRequests) {
+    final requestData = request.data();
+    final requestType = requestData['type'];
+    final userId = requestData['userId'];
+
+
+    final matchedPrice = prices.firstWhere(
+      (price) => price['item'] == requestType,
+      orElse: () => null,
+    );
+
+    if (matchedPrice != null) {
+
+      final userSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+
+      final userData = userSnapshot.data();
+
+      finalData.add({
+        'productRequest': requestData,
+        'price': matchedPrice,
+        'user': userData,
+      });
+    }
+  }
+
+  return finalData;
+}
+
+Future<List<Map<String, dynamic>>> getPrices() async {
+  try {
+    DocumentSnapshot doc = await FirebaseFirestore.instance
+        .collection('shopDetails')
+        .doc('KDc0ZUNjELfwwgt5h9QP')
+        .get();
+
+    if (doc.exists) {
+      List<dynamic> prices = doc.get('prices');
+      return prices.map((e) => Map<String, dynamic>.from(e)).toList();
+    } else {
+      return [];
+    }
+  } catch (e) {
+    print("Error fetching prices: $e");
+    return [];
+  }
+}
 }

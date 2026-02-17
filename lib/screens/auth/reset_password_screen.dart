@@ -73,7 +73,6 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     ),
                     const SizedBox(height: 32),
 
-                    /// Email Field
                     TextFormField(
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
@@ -97,7 +96,6 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
                     const SizedBox(height: 24),
 
-                    /// Reset Button
                     SizedBox(
                       width: double.infinity,
                       height: 50,
@@ -128,7 +126,6 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
                     const SizedBox(height: 20),
 
-                    /// Back to Login
                     Center(
                       child: TextButton(
                         onPressed: () => Navigator.pop(context),

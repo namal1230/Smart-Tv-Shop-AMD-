@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_tv_shop/providers/payment_provider.dart';
 import 'package:smart_tv_shop/providers/product_provider.dart';
 
 class CustomerRequestsScreen extends StatelessWidget {
@@ -8,8 +9,7 @@ class CustomerRequestsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // var products = Provider.of<ProductProvider>(context).productList;
-    // Dummy requests data
+ 
     final List<Map<String, dynamic>> requests =  Provider.of<ProductProvider>(context).productList;
     print("Fetched products: $requests");
     Color statusColor(String status) {
@@ -54,7 +54,6 @@ class CustomerRequestsScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
 
-                        /// Item
                         Text(
                           request["type"]!,
                           style: GoogleFonts.poppins(
@@ -65,7 +64,6 @@ class CustomerRequestsScreen extends StatelessWidget {
 
                         const SizedBox(height: 8),
 
-                        /// Issue
                         Text(
                           "Issue: ${request["description"]}",
                           style: GoogleFonts.poppins(),
@@ -86,15 +84,21 @@ class CustomerRequestsScreen extends StatelessWidget {
                         ),
 
                         const SizedBox(height: 6),
-                        /// Date
+
                         Text(
                           "Date: ${new DateTime.now().day}/${new DateTime.now().month}/${new DateTime.now().year}",
                           style: GoogleFonts.poppins(color: Colors.grey),
                         ),
 
+                        const SizedBox(height: 6),
+                        /// Date
+                         Text(
+                          "Model: ${request["price"]}",
+                          style: GoogleFonts.poppins(),
+                        ),
+
                         const SizedBox(height: 12),
 
-                        /// Status
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
@@ -116,6 +120,9 @@ class CustomerRequestsScreen extends StatelessWidget {
                             ),
                           ],
                         ),
+                        ElevatedButton.icon(onPressed: (){
+                          Provider.of<PaymentProvider>(context,listen: false).payFunction(request["price"].toString());
+                        }, icon: Icon(Icons.payments),label:Text("Pay here"),)
                       ],
                     ),
                   ),

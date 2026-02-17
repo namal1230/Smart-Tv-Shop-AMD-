@@ -6,12 +6,10 @@ class ShopProvider extends ChangeNotifier {
   Map<String, dynamic>? _shopDetails = {};
 
   ShopProvider(){
-    // Initialization if needed
     fetchShopDetails();
   }
 
   Future<void> saveShopDetails(Map<String, dynamic> shopData) async {
-    // Logic to save shop details
 
     await ShopService().saveShopDetails(shopData);
 

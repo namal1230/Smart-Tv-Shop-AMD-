@@ -1,14 +1,8 @@
-import 'package:animate_do/animate_do.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:provider/provider.dart';
-import 'package:smart_tv_shop/providers/auth_provider.dart';
-import 'package:smart_tv_shop/screens/auth/login_screen.dart';
 import 'package:smart_tv_shop/screens/customer/customer_home.dart';
 import 'package:smart_tv_shop/screens/owner/owner_dashboard.dart';
 
@@ -20,11 +14,8 @@ class AuthService {
   final BuildContext _context;
   static final String? uid = _auth.currentUser?.uid;
 
-  // final
-
   AuthService(this._context);
 
-  // Authentication related methods will go here
   static Future<void> signUp(
     String email,
     String password,
@@ -33,7 +24,6 @@ class AuthService {
     String contact,
     String address,
   ) async {
-    // Sign up logic
     try {
       final credential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
@@ -50,20 +40,6 @@ class AuthService {
     }
   }
 
-  // Future<UserCredential> signInWithGoogle() async {
-  //   final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
-  //   final GoogleSignInAuthentication? googleAuth =
-  //       await googleUser?.authentication;
-
-  //   final credential = GoogleAuthProvider.credential(
-  //     accessToken: googleAuth?.accessToken,
-  //     idToken: googleAuth.idToken,
-  //   );
-
-  //   return await _auth.signInWithCredential(credential);
-  // }
-
   Future<void> initializeUser() async {
     _auth.authStateChanges().listen((User? user) {
       if (user == null) {
@@ -78,7 +54,6 @@ class AuthService {
 
         Navigator.pop(_context);
       } else {
-        // _uid = user.uid;
         Navigator.push(
           _context,
           MaterialPageRoute(builder: (context) => CustomerHome()),

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_tv_shop/providers/admin_provider.dart';
-import 'package:smart_tv_shop/providers/auth_provider.dart';
 import 'package:smart_tv_shop/screens/owner/pending_requests_screen.dart';
 import 'package:smart_tv_shop/screens/owner/repair_history_screen.dart';
 import 'package:smart_tv_shop/screens/owner/repair_in_progress_screen.dart';
@@ -24,7 +23,6 @@ class _OwnerDashboardState extends State<OwnerDashboard> {
   void initState() {
     super.initState();
 
-    // Load dashboard data once
     Future.microtask(() {
       context.read<AdminProvider>().getDashboardValues();
     });
@@ -51,7 +49,6 @@ class _OwnerDashboardState extends State<OwnerDashboard> {
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () {
-              // Call sign out method from AuthService
               AuthService(context).signOut();
             },
           )
@@ -76,7 +73,6 @@ class _OwnerDashboardState extends State<OwnerDashboard> {
 
             const SizedBox(height: 20),
 
-            /// STAT CARDS
             Expanded(
               child: GridView.count(
                 crossAxisCount: 2,
@@ -135,7 +131,7 @@ class _OwnerDashboardState extends State<OwnerDashboard> {
                     child: _statCard(
                       context,
                       title: "Shop Details",
-                      value: "8",
+                      value: "",
                       icon: Icons.shop,
                       color: Colors.orange,
                       route: ShopDetailsEditScreen(),

@@ -1,14 +1,10 @@
-import 'dart:io';
-
 import 'package:animate_do/animate_do.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_tv_shop/providers/auth_provider.dart';
 import 'package:smart_tv_shop/services/auth_service.dart';
-import 'package:smart_tv_shop/services/image_service.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -31,7 +27,6 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     AuthService(context);
     super.initState();
   }
@@ -39,16 +34,7 @@ class _SignupScreenState extends State<SignupScreen> {
   void signup() {
     if (!_formKey.currentState!.validate()) return;
 
-    // Call the AuthService to sign up the user
-    // AuthService.signUp(
-    //   _emailController.text,
-    //   _passwordController.text,
-    //   selectedRole,
-    //   _nameController.text,
-    //   _phoneController.text,
-    // );
-
-    final result = Provider.of<AuthStateProvider>(context, listen: false)
+    Provider.of<AuthStateProvider>(context, listen: false)
         .signUp(
           _emailController.text,
           _passwordController.text,
@@ -66,7 +52,7 @@ class _SignupScreenState extends State<SignupScreen> {
           ),
         );
 
-    Navigator.pop(context); // back to login
+    Navigator.pop(context);
   }
 
   @override
@@ -174,7 +160,6 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
                 const SizedBox(height: 20),
 
-                /// Name
                 FadeInLeft(
                   child: TextFormField(
                     controller: _nameController,
@@ -189,7 +174,6 @@ class _SignupScreenState extends State<SignupScreen> {
 
                 const SizedBox(height: 20),
 
-                /// Email
                 FadeInRight(
                   child: TextFormField(
                     controller: _emailController,
@@ -205,7 +189,6 @@ class _SignupScreenState extends State<SignupScreen> {
 
                 const SizedBox(height: 20),
 
-                /// Phone
                 FadeInLeft(
                   child: TextFormField(
                     controller: _phoneController,
@@ -235,7 +218,6 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
                 const SizedBox(height: 20),
 
-                /// Password
                 FadeInRight(
                   child: TextFormField(
                     controller: _passwordController,
@@ -266,7 +248,6 @@ class _SignupScreenState extends State<SignupScreen> {
 
                 const SizedBox(height: 30),
 
-                /// Signup Button
                 FadeInUp(
                   delay: const Duration(milliseconds: 200),
                   child: SizedBox(
@@ -290,7 +271,6 @@ class _SignupScreenState extends State<SignupScreen> {
 
                 const SizedBox(height: 20),
 
-                /// Back to Login
                 FadeInUp(
                   delay: const Duration(milliseconds: 300),
                   child: Center(

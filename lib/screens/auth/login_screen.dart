@@ -6,9 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:smart_tv_shop/providers/auth_provider.dart';
 import 'package:smart_tv_shop/screens/auth/reset_password_screen.dart';
 import 'package:smart_tv_shop/screens/auth/signup_screen.dart';
-import 'package:smart_tv_shop/screens/customer/customer_home.dart';
-import 'package:smart_tv_shop/screens/owner/owner_dashboard.dart';
-import 'package:smart_tv_shop/services/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -31,7 +28,6 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     Provider.of<AuthStateProvider>(context, listen: false).login(_emailController.text, _passwordController.text, selectedRole, context);
-    // AuthService.signIn(_emailController.text, _passwordController.text, selectedRole,context);
   }
 
   @override
@@ -134,7 +130,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Column(
                     children:[ TextButton(
                       onPressed: () {
-                        // Navigator.pushNamed(context, '/signup');
                       },
                       child: InkWell(
                         onTap: (){
@@ -145,7 +140,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     TextButton(
                       onPressed: () {
-                        // Navigator.pushNamed(context, '/signup');
                       },
                       child: InkWell(
                         onTap: (){
