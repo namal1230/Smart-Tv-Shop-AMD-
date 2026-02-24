@@ -47,7 +47,7 @@ Firebase Authentication
 
 Cloud Firestore
 
-Payment Gateway: PayHere
+Payment Gateway: Stripe
 
 Device Features: Camera & Gallery Access
 
